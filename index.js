@@ -164,6 +164,13 @@ app.get('/movies', (req, res) => res.json(myTopMovies));
 app.get('/', (req, res) => res.send('Wow, I\'m building an API!'))
 
 
+
+//Logs application-level errors to the terminal
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Oops, there\'s been an error!');
+});
+
 //Listens to port 8080
 app.listen(8080, () => {
     console.log('Your app is listening to port 8080.');
