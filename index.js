@@ -4,6 +4,9 @@ const express = require('express'),
     morgan = require('morgan')
 ;
 
+//Uses Morgan to log requests in the terminal
+app.use(morgan('common'));
+
 //Variable for top movies objects
 let myTopMovies = [
     {
