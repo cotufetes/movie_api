@@ -163,7 +163,8 @@ app.get('/movies', (req, res) => res.json(myTopMovies));
 //Returns textual response at endpoint /
 app.get('/', (req, res) => res.send('Wow, I\'m building an API!'))
 
-
+//Serves documentation.html file from public folder using express.static
+app.use(express.static('public'));
 
 //Logs application-level errors to the terminal
 app.use((err, req, res, next) => {
