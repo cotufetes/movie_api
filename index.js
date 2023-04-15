@@ -1,6 +1,7 @@
-//Import Express
+//Import Express & Morgan
 const express = require('express'),
-    app = express()
+    app = express(),
+    morgan = require('morgan')
 ;
 
 //Variable for top movies objects
