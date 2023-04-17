@@ -1,13 +1,18 @@
 //Import Express & Morgan
 const express = require('express'),
     app = express(),
-    morgan = require('morgan')
+    morgan = require('morgan'),
+    bodyParser = require('body-parser'),
+    uuid = require('uuid')
 ;
 
 //Uses Morgan to log requests in the terminal
 app.use(morgan('common'));
 
-//Variable for top movies object array
+app.use(bodyParser.json());
+
+
+//Variable for movies object array
 let myTopMovies = [
     {
         title: 'Jumanji',
