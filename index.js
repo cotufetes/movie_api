@@ -7,7 +7,7 @@ const express = require('express'),
 //Uses Morgan to log requests in the terminal
 app.use(morgan('common'));
 
-//Variable for top movies objects
+//Variable for top movies object array
 let myTopMovies = [
     {
         title: 'Jumanji',
@@ -157,13 +157,13 @@ let myTopMovies = [
     },
 ];
 
-//Returns myTopMovies JSON object at endpoint /movies
+//Returns myTopMovies as JSON at endpoint /movies
 app.get('/movies', (req, res) => res.json(myTopMovies));
 
 //Returns textual response at endpoint /
 app.get('/', (req, res) => res.send('Wow, I\'m building an API!'))
 
-//Serves documentation.html file from public folder using express.static
+//Serves static files from public folder using express.static
 app.use(express.static('public'));
 
 //Logs application-level errors to the terminal
@@ -174,5 +174,5 @@ app.use((err, req, res, next) => {
 
 //Listens to port 8080
 app.listen(8080, () => {
-    console.log('Your app is listening to port 8080.');
+    console.log('Listening to port 8080.');
 });
