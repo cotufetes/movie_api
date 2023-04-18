@@ -8,7 +8,6 @@ const express = require('express'),
 
 //Uses body-parser to read body object
 app.use(bodyParser.json());
-;
 
 //Uses Morgan to log requests in the terminal
 app.use(morgan('common'));
@@ -121,7 +120,7 @@ let movies = [
         title: 'Die Hard',
         year: '1988',
         description: 'A New York City police officer tries to save his estranged wife and several others taken hostage by terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles.',
-        imageURL: 'https://upload.wikimedia.org/wikipedia/en/1/1e/Everything_Everywhere_All_at_Once.jpg',
+        imageURL: 'https://upload.wikimedia.org/wikipedia/en/c/ca/Die_Hard_%281988_film%29_poster.jpg',
         genre: {
             name: 'Action',
             description: 'Associated with particular types of spectacle (e.g., explosions, chases, combat).'
@@ -204,16 +203,122 @@ let movies = [
     },
 ];
 
+//CREATE new user
+app.post('/users', (req, res) => {
+    const newUser = req.body;
+
+    if (newUser.name) {
+        newUser.id = uuid.v4();
+        users.push(newUser);
+        res.status(201).json(newUser);
+    } else {
+        res.status(400).send('Users need names!');
+    }
+});
+
+//UPDATE user name
+app.put('/users/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedUser = req.body;
+
+    let user = users.find(user => user.id == id);
+
+    if (user) {
+        user.name = updatedUser.name;
+        res.status(200).json(user);
+    } else {
+        res.status(400).send('No such user in our database :(')
+    }
+});
+
+//DELETE user
+app.delete('/users/:username', (req, res) => {
+    const { username } = req.params;
+
+    let user = users.find(user => user.name === username);
+
+    if (user) {
+        users = users.filter(user => user.name != username);
+        res.status(200).send(`User ${username} has been deleted.`);
+    } else {
+        res.status(400).send('No such user in our database :(')
+    }
+}); 
+
+//CREATE favorite movie entry in user list
+app.post('/users/:username/favorites/:movieTitle', (req, res) => {
+    const { username, movieTitle } = req.params;
+
+    let user = users.find(user => user.name === username);
+
+    if (user) {
+        user.favoriteMovies.push(movieTitle);
+        res.status(200).send(`${movieTitle} has been added to ${username}'s favorite movies.`);
+    } else {
+        res.status(400).send('No such user in our database :(')
+    }
+});
+
+//DELETE favorite movie entry in user list
+app.delete('/users/:username/favorites/:movieTitle', (req, res) => {
+    const { username, movieTitle } = req.params;
+
+    let user = users.find(user => user.name === username);
+
+    if (user) {
+        user.favoriteMovies.filter(title => title !== movieTitle);
+        res.status(200).send(`${movieTitle} has been removed from ${username}'s favorite movies.`);
+    } else {
+        res.status(400).send('No such user in our database :(')
+    }
+}); 
+
 //READ textual response at endpoint /
 app.get('/', (req, res) => res.status(200).send('Welcome to myFlix'));
 
 //READ all movies as JSON at endpoint /movies
 app.get('/movies', (req, res) => res.status(200).json(movies));
 
+//READ specific movie by title
+app.get('/movies/:title', (req, res) => {
+    const { title } = req.params;
+    const movie = movies.find(movie => movie.title === title);
+
+    if (movie) {
+        res.status(200).json(movie);
+    } else {
+        res.status(400).send('No such movie in our database :(');
+    }
+});
+
+//READ specific genre by name
+app.get('/genres/:genreName', (req, res) => {
+    const { genreName } = req.params;
+    const genre = movies.find(movie => movie.genre.name === genreName).genre;
+
+    if (genre) {
+        res.status(200).json(genre);
+    } else {
+        res.status(400).send('No such genre in our database :(');
+    }
+});
+
+//READ specific director by name
+app.get('/directors/:directorName', (req, res) => {
+    const { directorName } = req.params;
+    const director = movies.find(movie => movie.director.name === directorName).director;
+
+    if (director) {
+        res.status(200).json(director);
+    } else {
+        res.status(400).send('No such director in our database :(');
+    }
+});
+
 //Logs application-level errors to the terminal
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Oops, there has been an error!');
+    res.status(500).send('Oops, there\'s been an error!');
 });
 
 //Listens to port 8080
