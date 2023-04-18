@@ -7,11 +7,12 @@
   </head>
 
 <body>
-  <h1>myFlix API Documentation</h1>
+  <h1>myFlix API</h1>
         <p>
             REST API for “myFlix” application that interacts with a database that stores data about different movies.
         </p>
-    <h2>Essential Features</h2>
+    <h2>Features &amp; Requirements</h2>
+    <h3>Essential Features</h3>
     <ul>
         <li>Return a list of ALL movies to the user.</li>
         <li>Return data (description, genre, director, image URL, whether it's featured or not) about a single movie by title to the user.</li>
@@ -23,14 +24,14 @@
         <li>Allow users to remove a movie from their list of favorites.</li>
         <li>Allow existing users to deregister</li>
     </ul>
-    <h2>Optional Features</h2>
+    <h3>Optional Features</h3>
     <ul>
         <li>Allow users to see which actors star in which movies.</li>
         <li>Allow users to view information about different actors.</li>
         <li>Allow users to view more information about different movies, such as the release date and the movie rating.</li>
         <li>Allow users to create a “To Watch” list in addition to their “Favorite Movies” list.</li>
     </ul>
-    <h2>Technical Requirements</h2>
+    <h3>Technical Requirements</h3>
     <ul>
         <li>The API must be a Node.js and Express application.</li>
         <li>The API must use REST architecture, with URL endpoints corresponding to the data operations listed above.</li>
@@ -47,5 +48,145 @@
         <li>The API source code must be deployed to a publicly accessible platform like GitHub.</li>
         <li>The API must be deployed to Heroku.</li>
     </ul>
+    <h2>Endpoint Documentation</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Business Logic</th>
+          <th>URL</th>
+          <th>HTTP Method</th>
+          <th>Query Parameters</th>
+          <th>Request Body Data Format</th>
+          <th>Response Body Data Format</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Returns list of all movies.</td>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>A JSON object holding data about all the movies.</td>
+        </tr>
+        <tr>
+          <td>Returns data about a single movie by title.</td>
+          <td>/movies/[title]</td>
+          <td>GET</td>
+          <td>:title</td>
+          <td>None</td>
+          <td>
+            A JSON object holding data about the movie that was requested, structured like:<br/>
+            {<br/>
+              title: 'The Lord of the Rings: The Fellowship of the Ring',<br/>
+              year: '2001',<br/>
+              description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.',<br/>
+              imageURL: 'https://upload.wikimedia.org/wikipedia/en/8/8a/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29.jpg',<br/>
+              genre: {<br/>
+                  name: 'Fantasy',<br/>
+                  description: 'Films defined by situations that transcend natural laws and/or by settings inside a fictional universe, with narratives that are often inspired by or involve human myths.'<br/>
+              },<br/>
+              director: {<br/>
+                  name: 'Peter Jackson',<br/>
+                  birth: '1961',<br/>
+                  death: '',<br/>
+                  bio: 'Sir Peter Robert Jackson ONZ KNZM (born 31 October 1961) is a New Zealand film director,screenwriter and producer. He is best known as the director, writer and producer of the ""Lord of the Rings"" trilogy (2001-2003) and the ""Hobbit"" trilogy (2012-2014), both of which are adapted from the novels of the same name by J. R. R. Tolkien.'<br/>
+              },<br/>
+              featured: true<br/>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Returns data about a genre by name.</td>
+          <td>/genres/[genreName]</td>
+          <td>GET</td>
+          <td>:genreName</td>
+          <td>None</td>
+          <td>
+            A JSON object holding data about the genre that was requested, structured like:<br/>
+            {<br/>
+              name: 'Science fiction',<br/>
+              description: 'Defined by a combination of imaginative speculation and a scientific or technological premise, making use of the changes and trajectory of technology and science.'<br/>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Returns data about a director by name.</td>
+          <td>/directors/[directorName]</td>
+          <td>GET</td>
+          <td>:directorName</td>
+          <td>None</td>
+          <td>
+            A JSON object holding data about the director that was requested, structured like:<br/>
+            {<br/>
+              name: 'Hayao Miyazaki',<br/>
+              birth: '1941',<br/>
+              death: '',<br/>
+              bio: 'Hayao Miyazaki (born January 5, 1941) is a Japanese animator, director, producer, screenwriter, author, and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature films, and is widely regarded as one of the most accomplished filmmakers in the history of animation.'<br/>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Allows new users to register.</td>
+          <td>/users</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>
+            A JSON object holding data about the user to add, structured like:<br/>
+            {<br/>
+              name: 'cotufetes',<br/>
+              favoriteMovies: ['']<br/>
+            }
+          </td>
+          <td>
+            A JSON object holding data about the user that was added, including a generated ID, structured like:<br/>
+            {<br/>
+              name: 'cotufetes',<br/>
+              favoriteMovies: [''],<br/>
+              id: 1<br/>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Allows users to update their username.</td>
+          <td>/users/[id]</td>
+          <td>PUT</td>
+          <td>:id</td>
+          <td>None</td>
+          <td>
+            A JSON object holding data about the user that was updated, including the updated username, structured like:<br/>
+            {<br/>
+              name: 'cotufeta',<br/>
+              favoriteMovies: [''],<br/>
+              id: 1<br/>
+            }
+          </td>
+        </tr>
+        <tr>
+          <td>Allows users to add a movie to their list of favorites.</td>
+          <td>/users/[username]/favorites/[movieTitle]</td>
+          <td>POST</td>
+          <td>:username, :movieTitle</td>
+          <td>None</td>
+          <td>Textual response: "[movieTitle] has been added to [username]'s favorite movies."</td>
+        </tr>
+        <tr>
+          <td>Allows users to remove a movie from their list of favorites.</td>
+          <td>/users/[username]/favorites/[movieTitle]</td>
+          <td>DELETE</td>
+          <td>:username, :movieTitle</td>
+          <td>None</td>
+          <td>Textual response: "[movieTitle] has been removed from [username]'s favorite movies."</td>
+        </tr>
+        <tr>
+          <td>Allows existing users to deregister.</td>
+          <td>/users/[username]</td>
+          <td>DELETE</td>
+          <td>:username</td>
+          <td>None</td>
+          <td>Textual response: "User [username] has been deleted."</td>
+        </tr>
+      </tbody>
+    </table>
 </body>
 </html>
