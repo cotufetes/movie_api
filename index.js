@@ -1,4 +1,4 @@
-//Import Express & Morgan
+//Imports
 const express = require('express'),
     app = express(),
     morgan = require('morgan'),
@@ -6,20 +6,41 @@ const express = require('express'),
     uuid = require('uuid')
 ;
 
+//Uses body-parser to read body object
+app.use(bodyParser.json());
+;
+
 //Uses Morgan to log requests in the terminal
 app.use(morgan('common'));
 
-app.use(bodyParser.json());
+//Serves static files from public folder using express.static
+app.use(express.static('public'));
 
+//Variable for users object array
+let users = [
+    {
+        id: 1,
+        name: 'cotufetes',
+        favoriteMovies: ['Jumanji']
+    },
+    {
+        id: 2,
+        name: 'cassalla1000',
+        favoriteMovies: []
+    }
+];
 
 //Variable for movies object array
-let myTopMovies = [
+let movies = [
     {
         title: 'Jumanji',
         year: '1995',
         description: 'When two kids find and play a magical board game, they release a man trapped in it for decades - and a host of dangers that can only be stopped by finishing the game.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/b/b6/Jumanji_poster.jpg',
-        genre: ['adventure', 'fantasy', 'comedy', 'family'],
+        genre: {
+            name: 'Adventure',
+            description: 'Implies a narrative that is defined by a journey (often including some form of pursuit) and is usually located within a fantasy or exoticized setting. Typically, though not always, such stories include the quest narrative. The predominant emphasis on violence and fighting in action films is the typical difference between the two genres.'
+        },
         director: {
             name: 'Joe Johnston',
             birth: '1950',
@@ -33,7 +54,10 @@ let myTopMovies = [
         year: '2004',
         description: 'Cady Heron is a hit with The Plastics, the A-list girl clique at her new school, until she makes the mistake of falling for Aaron Samuels, the ex-boyfriend of alpha Plastic Regina George.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/a/ac/Mean_Girls_film_poster.png',
-        genre: ['comedy', 'high school'],
+        genre: {
+            name: 'Comedy',
+            description: 'Defined by events that are primarily intended to make the audience laugh.'
+        },
         director: {
             name: 'Mark Waters',
             birth: '1964',
@@ -47,7 +71,10 @@ let myTopMovies = [
         year: '2016',
         description: 'While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/a/ab/La_La_Land_%28film%29.png',
-        genre: ['musical', 'comedy', 'drama', 'romantic'],
+        genre: {
+            name: 'Musical',
+            description: 'A genre in which songs performed by the characters are interwoven into the narrative, sometimes accompanied by dancing. The songs usually advance the plot or develop the film\'s characters or may serve merely as breaks in the storyline, often as elaborate "production numbers".'
+        },
         director: {
             name: 'Damien Chazelle',
             birth: '1985',
@@ -61,7 +88,10 @@ let myTopMovies = [
         year: '2001',
         description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/8/8a/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29.jpg',
-        genre: ['action', 'adventure', 'drama', 'fantasy', 'book adaptation'],
+        genre: {
+            name: 'Fantasy',
+            description: 'Films defined by situations that transcend natural laws and/or by settings inside a fictional universe, with narratives that are often inspired by or involve human myths.'
+        },
         director: {
             name: 'Peter Jackson',
             birth: '1961',
@@ -75,7 +105,10 @@ let myTopMovies = [
         year: '1993',
         description: 'A teenage boy named Max and his little sister move to Salem, where he struggles to fit in before awakening a trio of diabolical witches that were executed in the 17th century.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/c/c9/Hocuspocusposter.jpg',
-        genre: ['comedy', 'family', 'fantasy'],
+        genre: {
+            name: 'Comedy',
+            description: 'Defined by events that are primarily intended to make the audience laugh.'
+        },
         director: {
             name: 'Kenny Ortega',
             birth: '1950',
@@ -85,23 +118,20 @@ let myTopMovies = [
         featured: true
     },
     {
-        title: 'Everything, Everywhere, All At Once',
-        year: '2022',
-        description: 'A middle-aged Chinese immigrant is swept up into an insane adventure in which she alone can save existence by exploring other universes and connecting with the lives she could have led.',
+        title: 'Die Hard',
+        year: '1988',
+        description: 'A New York City police officer tries to save his estranged wife and several others taken hostage by terrorists during a Christmas party at the Nakatomi Plaza in Los Angeles.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/1/1e/Everything_Everywhere_All_at_Once.jpg',
-        genre: ['action', 'adventure', 'comedy'],
-        director: [{
-            name: 'Daniel Kwan',
-            birth: '1988',
-            death: '',
-            bio: 'Daniel Kwan was born February 10, 1988 in Westborough, Massachusetts to a Taiwanese mother and a father from Hong Kong. He and Daniel Scheinert form the filmmaker duo known as the "Daniels" and are known for their absurdist comedy-dramas "Swiss Army Man" (2016) and "Everything Everywhere All at Once" (2022).'
+        genre: {
+            name: 'Action',
+            description: 'Associated with particular types of spectacle (e.g., explosions, chases, combat).'
         },
-        {
-            name: 'Daniel Scheinert',
-            birth: '1987',
+        director: {
+            name: 'John McTiernan',
+            birth: '1951',
             death: '',
-            bio: 'Daniel Scheinert was born June 7, 1987 in Birmingham, Alabama. He and Daniel Kwan form the filmmaker duo known as the "Daniels" and are known for their absurdist comedy-dramas "Swiss Army Man" (2016) and "Everything Everywhere All at Once" (2022).'
-        }],
+            bio: 'John Campbell McTiernan Jr. (born January 8, 1951) is an American filmmaker. He is best known for his action films, including "Predator" (1987), "Die Hard" (1988), and "The Hunt for Red October" (1990).'
+        },
         featured: true
     },
     {
@@ -109,7 +139,10 @@ let myTopMovies = [
         year: '2003',
         description: 'Gandalf and Aragorn lead the World of Men against Sauron\'s army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/b/be/The_Lord_of_the_Rings_-_The_Return_of_the_King_%282003%29.jpg',
-        genre: ['action', 'adventure', 'drama', 'fantasy', 'book adaptation'],
+        genre: {
+            name: 'Fantasy',
+            description: 'Films defined by situations that transcend natural laws and/or by settings inside a fictional universe, with narratives that are often inspired by or involve human myths.'
+        },
         director: {
             name: 'Peter Jackson',
             birth: '1961',
@@ -123,7 +156,10 @@ let myTopMovies = [
         year: '1988',
         description: 'When two girls move to the country to be near their ailing mother, they have adventures with the wondrous forest spirits who live nearby.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/0/02/My_Neighbor_Totoro_-_Tonari_no_Totoro_%28Movie_Poster%29.jpg',
-        genre: ['animation', 'family'],
+        genre: {
+            name: 'Animation',
+            description: 'A film medium in which the film\'s images are primarily created by computer or hand and the characters are voiced by actors. Animation can incorporate any genre and subgenre.'
+        },
         director: {
             name: 'Hayao Miyazaki',
             birth: '1941',
@@ -137,7 +173,10 @@ let myTopMovies = [
         year: '2002',
         description: 'While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron\'s new ally, Saruman, and his hordes of Isengard.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/d/d0/Lord_of_the_Rings_-_The_Two_Towers_%282002%29.jpg',
-        genre: ['action', 'adventure', 'drama', 'fantasy', 'book adaptation'],
+        genre: {
+            name: 'Fantasy',
+            description: 'Films defined by situations that transcend natural laws and/or by settings inside a fictional universe, with narratives that are often inspired by or involve human myths.'
+        },
         director: {
             name: 'Peter Jackson',
             birth: '1961',
@@ -151,7 +190,10 @@ let myTopMovies = [
         year: '2010',
         description: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
         imageURL: 'https://upload.wikimedia.org/wikipedia/en/2/2e/Inception_%282010%29_theatrical_poster.jpg',
-        genre: ['action', 'adventure', 'sci-fi'],
+        genre: {
+            name: 'Science fiction',
+            description: 'Defined by a combination of imaginative speculation and a scientific or technological premise, making use of the changes and trajectory of technology and science.'
+        },
         director: {
             name: 'Christopher Nolan',
             birth: '1970',
@@ -162,19 +204,16 @@ let myTopMovies = [
     },
 ];
 
-//Returns myTopMovies as JSON at endpoint /movies
-app.get('/movies', (req, res) => res.json(myTopMovies));
+//READ textual response at endpoint /
+app.get('/', (req, res) => res.status(200).send('Welcome to myFlix'));
 
-//Returns textual response at endpoint /
-app.get('/', (req, res) => res.send('Wow, I\'m building an API!'))
-
-//Serves static files from public folder using express.static
-app.use(express.static('public'));
+//READ all movies as JSON at endpoint /movies
+app.get('/movies', (req, res) => res.status(200).json(movies));
 
 //Logs application-level errors to the terminal
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Oops, there\'s been an error!');
+    res.status(500).send('Oops, there has been an error!');
 });
 
 //Listens to port 8080
