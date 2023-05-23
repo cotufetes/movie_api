@@ -71,58 +71,58 @@
         </tr>
         <tr>
           <td>Returns data about a single movie by title.</td>
-          <td>/movies/[title]</td>
+          <td>/movies/:Title</td>
           <td>GET</td>
-          <td>:title</td>
+          <td>:Title</td>
           <td>None</td>
           <td>
             A JSON object holding data about the movie that was requested, structured like:<br/>
             {<br/>
-              title: 'The Lord of the Rings: The Fellowship of the Ring',<br/>
-              year: '2001',<br/>
-              description: 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.',<br/>
-              imageURL: 'https://upload.wikimedia.org/wikipedia/en/8/8a/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring_%282001%29.jpg',<br/>
-              genre: {<br/>
-                  name: 'Fantasy',<br/>
-                  description: 'Films defined by situations that transcend natural laws and/or by settings inside a fictional universe, with narratives that are often inspired by or involve human myths.'<br/>
+              Genre: {<br/>
+                  Name: String,<br/>
+                  Description: String<br/>
               },<br/>
-              director: {<br/>
-                  name: 'Peter Jackson',<br/>
-                  birth: '1961',<br/>
-                  death: '',<br/>
-                  bio: 'Sir Peter Robert Jackson ONZ KNZM (born 31 October 1961) is a New Zealand film director,screenwriter and producer. He is best known as the director, writer and producer of the ""Lord of the Rings"" trilogy (2001-2003) and the ""Hobbit"" trilogy (2012-2014), both of which are adapted from the novels of the same name by J. R. R. Tolkien.'<br/>
+              Director: {<br/>
+                  Name: String,<br/>
+                  Birth: Number,<br/>
+                  Death: Number,<br/>
+                  Bio: String<br/>
               },<br/>
-              featured: true<br/>
+              Title: String,<br/>
+              ImageURL: String,<br/>
+              Year: Number,<br/>
+              Synopsis: String,<br/>
+              Featured: Boolean<br/>
             }
           </td>
         </tr>
         <tr>
           <td>Returns data about a genre by name.</td>
-          <td>/genres/[genreName]</td>
+          <td>/genres/:Genre</td>
           <td>GET</td>
-          <td>:genreName</td>
+          <td>:Genre</td>
           <td>None</td>
           <td>
             A JSON object holding data about the genre that was requested, structured like:<br/>
             {<br/>
-              name: 'Science fiction',<br/>
-              description: 'Defined by a combination of imaginative speculation and a scientific or technological premise, making use of the changes and trajectory of technology and science.'<br/>
+              Name: String,<br/>
+              Description: String <br/>
             }
           </td>
         </tr>
         <tr>
           <td>Returns data about a director by name.</td>
-          <td>/directors/[directorName]</td>
+          <td>/directors/:Director</td>
           <td>GET</td>
-          <td>:directorName</td>
+          <td>:Director</td>
           <td>None</td>
           <td>
             A JSON object holding data about the director that was requested, structured like:<br/>
             {<br/>
-              name: 'Hayao Miyazaki',<br/>
-              birth: '1941',<br/>
-              death: '',<br/>
-              bio: 'Hayao Miyazaki (born January 5, 1941) is a Japanese animator, director, producer, screenwriter, author, and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature films, and is widely regarded as one of the most accomplished filmmakers in the history of animation.'<br/>
+              Name: 'Hayao Miyazaki',<br/>
+              Birth: '1941',<br/>
+              Death: '',<br/>
+              Bio: 'Hayao Miyazaki (born January 5, 1941) is a Japanese animator, director, producer, screenwriter, author, and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature films, and is widely regarded as one of the most accomplished filmmakers in the history of animation.'<br/>
             }
           </td>
         </tr>
@@ -134,57 +134,94 @@
           <td>
             A JSON object holding data about the user to add, structured like:<br/>
             {<br/>
-              name: 'cotufetes',<br/>
-              favoriteMovies: ['']<br/>
+              Username: 'cotufetes',<br/>
+              Email: 'hello@cotufetes.com',<br/>
+              Password: 'poppitypop',<br/>
+              Birthday: '1991-04-02'<br/>
             }
           </td>
           <td>
             A JSON object holding data about the user that was added, including a generated ID, structured like:<br/>
             {<br/>
-              name: 'cotufetes',<br/>
-              favoriteMovies: [''],<br/>
-              id: 1<br/>
+              _id: 1<br/>
+              Username: 'cotufetes',<br/>
+              Email: 'hello@cotufetes.com',<br/>
+              Password: 'poppitypop',<br/>
+              Birthday: '1991-04-02'<br/>
+              FavoriteMovies: [''],<br/>
             }
           </td>
         </tr>
         <tr>
-          <td>Allows users to update their username.</td>
-          <td>/users/[id]</td>
+          <td>Allows users to update their profiles.</td>
+          <td>/users/:Username</td>
           <td>PUT</td>
-          <td>:id</td>
-          <td>None</td>
+          <td>:Username</td>
           <td>
-            A JSON object holding data about the user that was updated, including the updated username, structured like:<br/>
+            A JSON object holding the data that needs to be updated, structured like:<br/>
             {<br/>
-              name: 'cotufeta',<br/>
-              favoriteMovies: [''],<br/>
-              id: 1<br/>
+              Password: 'poppitypop!!!'<br/>
+            }
+          </td>
+          <td>
+            A JSON object holding data about the user that was updated, including the updated data, structured like:<br/>
+            {<br/>
+              _id: 1<br/>
+              Username: 'cotufetes',<br/>
+              Email: 'hello@cotufetes.com',<br/>
+              Password: 'poppitypop!!!',<br/>
+              Birthday: '1991-04-02'<br/>
+              FavoriteMovies: [''],<br/>
             }
           </td>
         </tr>
         <tr>
           <td>Allows users to add a movie to their list of favorites.</td>
-          <td>/users/[username]/favorites/[movieTitle]</td>
+          <td>/users/:Username/favorites/:MovieID</td>
           <td>POST</td>
-          <td>:username, :movieTitle</td>
+          <td>:Username, :MovieID</td>
           <td>None</td>
-          <td>Textual response: "[movieTitle] has been added to [username]'s favorite movies."</td>
+          <td>
+            A JSON object holding data about the user whose FavoriteMovies list was updated, including the updated data, structured like:<br/>
+            {<br/>
+              _id: 1<br/>
+              Username: 'cotufetes',<br/>
+              Email: 'hello@cotufetes.com',<br/>
+              Password: 'poppitypop!!!',<br/>
+              Birthday: '1991-04-02'<br/>
+              FavoriteMovies: [
+                '6461e017bf7b96338ebcf277'
+              ],<br/>
+            }
+          </td>
         </tr>
         <tr>
           <td>Allows users to remove a movie from their list of favorites.</td>
-          <td>/users/[username]/favorites/[movieTitle]</td>
+          <td>/users/Username/favorites/MovieID</td>
           <td>DELETE</td>
-          <td>:username, :movieTitle</td>
+          <td>:Username, :MovieID</td>
           <td>None</td>
-          <td>Textual response: "[movieTitle] has been removed from [username]'s favorite movies."</td>
+          <td>
+            A JSON object holding data about the user whose FavoriteMovies list was updated, including the added movie ID, structured like:<br/>
+            {<br/>
+              _id: 1<br/>
+              Username: 'cotufetes',<br/>
+              Email: 'hello@cotufetes.com',<br/>
+              Password: 'poppitypop!!!',<br/>
+              Birthday: '1991-04-02'<br/>
+              FavoriteMovies: [
+                '6461e017bf7b96338ebcf277'
+              ],<br/>
+            }
+          </td>
         </tr>
         <tr>
           <td>Allows existing users to deregister.</td>
-          <td>/users/[username]</td>
+          <td>/users/:Username</td>
           <td>DELETE</td>
-          <td>:username</td>
+          <td>:Username</td>
           <td>None</td>
-          <td>Textual response: "User [username] has been deleted."</td>
+          <td>Textual response: "User :Username has been deleted."</td>
         </tr>
       </tbody>
     </table>
