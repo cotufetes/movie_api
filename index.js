@@ -28,7 +28,7 @@ app.use(express.static('public'));
 //READ textual response at endpoint /
 app.get('/', (req, res) => res.status(200).send('Welcome to myFlix'));
 
-/*---Movies---*/
+/*---Movies---------------------**/
 //READ all movies as JSON at endpoint /movies
 app.get('/movies', (req, res) => {
     Movies.find()
@@ -56,7 +56,7 @@ app.get('/movies/:Title', (req, res) => {
 		});
 });
 
-//READ specific genre by name
+//READ list of movies with a specific genre
 app.get('/genres/:Genre', (req, res) => {
 	Movies.find({ 'Genre.Name': req.params.Genre })
         .then((movies) => {
@@ -72,7 +72,7 @@ app.get('/genres/:Genre', (req, res) => {
         });
 });
 
-//READ specific director by name
+//READ list of movies with a specific director
 app.get('/directors/:Director', (req, res) => {
 	Movies.findOne({ 'Director.Name': req.params.Director })
         .then((movies) => {
@@ -88,16 +88,8 @@ app.get('/directors/:Director', (req, res) => {
         });
 });
 
-/*--Users--*/
+/*--Users---------------------*/
 //CREATE new user
-/* Will expect JSON in this format
-{
-  _id: Integer,
-  username: String,
-  email: String,
-  password: String,
-  birthday: Date
-}*/
 app.post('/users', (req, res) => {
   Users.findOne({ Username: req.body.Username })
     .then((user) => {
@@ -147,6 +139,31 @@ app.get('/users/:Username', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
+  
+// UPDATE a user's info
+app.put('/users/:Username', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username },
+  { $set:
+    {
+      Username: req.body.Username,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      Birthday: req.body.Birthday
+    }
+  },
+  { new: true }
+  ).then((updatedUser) => {
+      if(!updatedUser) {
+        return res.status(404).send('Error: User ' + req.params.Username + ' does not exist.');
+      } else {
+        res.json(updatedUser);
+      }
+    })
+    .catch(error => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
+});
 
 //DELETE user by username
 app.delete('/users/:Username', (req, res) => {
@@ -155,7 +172,7 @@ app.delete('/users/:Username', (req, res) => {
       if (!user) {
         res.status(400).send('User ' + req.params.Username + ' was not found');
       } else {
-        res.status(200).send('User ' + req.params.Username + ' was deleted.');
+        res.status(200).send('User ' + req.params.Username + ' has been deleted.');
       }
     })
     .catch((err) => {
@@ -163,74 +180,48 @@ app.delete('/users/:Username', (req, res) => {
       res.status(500).send('Error: ' + err);
     });
 });
-  
-// UPDATE a user's info, by username
-/* Will expect JSON in this format
-{
-Username: String,
-(required)
-Email: String,
-(required)
-Password: String,
-(required)
-Birthday: Date
-}*/
-app.put('/users/:Username', (req, res) => {
-  Users.findOneAndUpdate({ Username: req.params.Username }, { $set:
-    {
-      Username: req.body.Username,
-      Email: req.body.Email,
-      Password: req.body.Password,
-      Birthday: req.body.Birthday
-    }
-  },
-  { new: true }, // This line makes sure that the updated document is returned
-  (err, updatedUser) => {
-    if(err) {
+
+// CREATE favorite movie entry in user list
+app.post('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username },
+    {$push: { FavoriteMovies: req.params.MovieID }},
+    {new: true} // This line makes sure that the updated document is returned
+  ).then((updatedUser) => {
+      if(!updatedUser) {
+        return res.status(404).send('Error: User ' + req.params.Username + ' does not exist.');
+      } else {
+        res.json(updatedUser);
+      }
+    })
+    .catch(error => {
       console.error(err);
       res.status(500).send('Error: ' + err);
-    } else {
-      res.json(updatedUser);
-    }
-  });
+    })
+});
+  
+//DELETE favorite movie entry in user list
+app.delete('/users/:Username/movies/:MovieID', (req, res) => {
+  Users.findOneAndUpdate({ Username: req.params.Username },
+    {$pull: { FavoriteMovies: req.params.MovieID }},
+     { new: true }
+  ).then((updatedUser) => {
+      if(!updatedUser) {
+        return res.status(404).send('Error: User ' + req.params.Username + ' does not exist.');
+      } else {
+        res.json(updatedUser);
+      }
+    })
+    .catch(error => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    })
 });
 
-  // CREATE favorite movie entry in user list
-  app.post('/users/:Username/movies/:MovieID', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-       $push: { FavoriteMovies: req.params.MovieID }
-     },
-     { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
-  });
-  
-  //DELETE favorite movie entry in user list
-  app.delete('/users/:Username/movies/:MovieID', (req, res) => {
-    Users.findOneAndUpdate({ Username: req.params.Username }, {
-       $pull: { FavoriteMovies: req.params.MovieID }
-     },
-     { new: true }, // This line makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      } else {
-        res.json(updatedUser);
-      }
-    });
-  });
 
 //Logs application-level errors to the terminal
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Oops, there\'s been an error!');
+  console.error(err.stack);
+  res.status(500).send('Oops, there\'s been an error!');
 });
 
 //Listens to port 8080
