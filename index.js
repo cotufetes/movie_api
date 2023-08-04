@@ -19,6 +19,13 @@ mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//Imports authentication
+let auth = require('./auth')(app) // HTML Authentication
+
+//Imports Passport
+const passport = require('passport'); // JWT Authentication
+require('./passport');
+
 //Uses Morgan to log requests in the terminal
 app.use(morgan('common'));
 
