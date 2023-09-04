@@ -5,6 +5,8 @@ const express = require('express'),
     bodyParser = require('body-parser')
 ;
 
+const { check, validationResult } = require('express-validator');
+
 const mongoose = require('mongoose');
 const Models = require('./models.js');
 
@@ -109,7 +111,20 @@ app.get('/directors/:Director',
 
 /*--Users---------------------*/
 //CREATE new user
-app.post('/users', async (req, res) => {
+app.post('/users',
+[//Validation logic
+  check('Username', 'Username is required.').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required.').not().isEmpty(),
+  check('Password', 'Password must be at least 8 characters long.').isLength({min: 8}),
+  check('Email', 'Email does not appear to be valid.').isEmail()
+], async (req, res) => {
+
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({errors: errors.array()});
+  }
+
   let hashedPassword = Users.hashPassword(req.body.Password);
   await Users.findOne({ Username: req.body.Username })
     .then((user) => {
@@ -166,8 +181,21 @@ app.get('/users/:Username',
   
 // UPDATE a user's info with JWT
 app.put('/users/:Username', 
-  passport.authenticate('jwt', {session: false}), 
-  async (req, res) => {
+  passport.authenticate('jwt', {session: false}),
+
+  [//Validation logic
+  check('Username', 'Username is required.').isLength({min: 5}),
+  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Password', 'Password is required - must be at least 8 characters long.').isLength({min: 8}),
+  check('Email', 'Email does not appear to be valid.').isEmail(),
+  check('Birthday', 'Birthday is not a valid date - follow format YYYY-MM-DD').isDate()
+], async (req, res) => {
+
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({errors: errors.array()});
+  }
+
     // Condition: Unauthorises users who are not the one being updated
     if(req.user.Username !== req.params.Username){
       return res.status(400).send('Permission denied');
