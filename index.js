@@ -304,7 +304,8 @@ app.use((err, req, res, next) => {
   res.status(500).send('Oops, there\'s been an error!');
 });
 
-//Listens to port 8080
-app.listen(8080, () => {
-    console.log('Listening to port 8080.');
+//Looks for a pre-configured port number in the environment variable. Sets the port to 8080 if nothing is found.
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0.', () => {
+  console.log('Listening on port ' + port);
 });
