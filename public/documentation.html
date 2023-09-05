@@ -3,13 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <title>myFlix API - Documentation</title>
+    <title>cotuFlix API - Documentation</title>
+    <style>
+      td {
+        border: 1px solid lightgray;
+        padding: 15px;
+      }
+    </style>
   </head>
 
 <body>
-  <h1>myFlix API</h1>
+  <h1>cotuFlix API</h1>
         <p>
-            REST API for “myFlix” application that interacts with a database that stores data about different movies.
+            REST API for “cotuFlix” application that interacts with a database that stores data about different movies.
         </p>
     <h2>Features &amp; Requirements</h2>
     <h3>Essential Features</h3>
@@ -23,13 +29,6 @@
         <li>Allow users to add a movie to their list of favorites.</li>
         <li>Allow users to remove a movie from their list of favorites.</li>
         <li>Allow existing users to deregister</li>
-    </ul>
-    <h3>Optional Features</h3>
-    <ul>
-        <li>Allow users to see which actors star in which movies.</li>
-        <li>Allow users to view information about different actors.</li>
-        <li>Allow users to view more information about different movies, such as the release date and the movie rating.</li>
-        <li>Allow users to create a “To Watch” list in addition to their “Favorite Movies” list.</li>
     </ul>
     <h3>Technical Requirements</h3>
     <ul>
@@ -76,24 +75,26 @@
           <td>:Title</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the movie that was requested, structured like:<br/>
-            {<br/>
-              Genre: {<br/>
-                  Name: String,<br/>
-                  Description: String<br/>
-              },<br/>
-              Director: {<br/>
-                  Name: String,<br/>
-                  Birth: Number,<br/>
-                  Death: Number,<br/>
-                  Bio: String<br/>
-              },<br/>
-              Title: String,<br/>
-              ImageURL: String,<br/>
-              Year: Number,<br/>
-              Synopsis: String,<br/>
-              Featured: Boolean<br/>
-            }
+            A JSON object holding data about the movie that was requested, structured like:
+            <pre>
+              {
+                Genre: {
+                    Name: String,
+                    Description: String
+                },
+                Director: {
+                    Name: String,
+                    Birth: Number,
+                    Death: Number,
+                    Bio: String
+                },
+                Title: String,
+                ImageURL: String,
+                Year: Number,
+                Synopsis: String,
+                Featured: Boolean
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -103,11 +104,13 @@
           <td>:Genre</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the genre that was requested, structured like:<br/>
-            {<br/>
-              Name: String,<br/>
-              Description: String <br/>
-            }
+            A JSON object holding data about the genre that was requested, structured like:
+            <pre>
+              {
+                Name: String,
+                Description: String
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -117,13 +120,19 @@
           <td>:Director</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the director that was requested, structured like:<br/>
-            {<br/>
-              Name: 'Hayao Miyazaki',<br/>
-              Birth: '1941',<br/>
-              Death: '',<br/>
-              Bio: 'Hayao Miyazaki (born January 5, 1941) is a Japanese animator, director, producer, screenwriter, author, and manga artist. A co-founder of Studio Ghibli, he has attained international acclaim as a masterful storyteller and creator of Japanese animated feature films, and is widely regarded as one of the most accomplished filmmakers in the history of animation.'<br/>
-            }
+            A JSON object holding data about the director that was requested, structured like:
+            <pre>
+              {
+                "Name": "Hayao Miyazaki",
+                "Birth": "1941",
+                "Death": "",
+                "Bio": "Hayao Miyazaki (born January 5, 1941) is a Japanese animator, director, producer,
+                screenwriter, author, and manga artist. A co-founder of Studio Ghibli,
+                he has attained international acclaim as a masterful storyteller and creator
+                of Japanese animated feature films, and is widely regarded as one of the
+                most accomplished filmmakers in the history of animation."
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -132,24 +141,28 @@
           <td>POST</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the user to add, structured like:<br/>
-            {<br/>
-              Username: 'cotufetes',<br/>
-              Email: 'hello@cotufetes.com',<br/>
-              Password: 'poppitypop',<br/>
-              Birthday: '1991-04-02'<br/>
-            }
+            A JSON object holding data about the user to add, structured like:
+            <pre>
+              {
+                "Username": "thisUser19",
+                "Email": "thisUser19@email.com",
+                "Password": "thisPassword_19",
+                "Birthday": "1991-12-31"
+              }
+            </pre>
           </td>
           <td>
-            A JSON object holding data about the user that was added, including a generated ID, structured like:<br/>
-            {<br/>
-              _id: 1<br/>
-              Username: 'cotufetes',<br/>
-              Email: 'hello@cotufetes.com',<br/>
-              Password: 'poppitypop',<br/>
-              Birthday: '1991-04-02'<br/>
-              FavoriteMovies: [''],<br/>
-            }
+            A JSON object holding data about the user that was added, including a generated ID, structured like:
+            <pre>
+              {
+                "_id": "1",
+                "Username": "thisUser19",
+                "Email": "thisUser19@email.com",
+                "Password": "thisPassword_19",
+                "Birthday": "1991-12-31",
+                "FavoriteMovies": [""]
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -158,21 +171,24 @@
           <td>PUT</td>
           <td>:Username</td>
           <td>
-            A JSON object holding the data that needs to be updated, structured like:<br/>
-            {<br/>
-              Password: 'poppitypop!!!'<br/>
-            }
+            A JSON object holding the data that needs to be updated, structured like:
+            <pre>
+              {
+                "Password": "thisNewPassword=19",
+              }
+            </pre>
           </td>
           <td>
-            A JSON object holding data about the user that was updated, including the updated data, structured like:<br/>
-            {<br/>
-              _id: 1<br/>
-              Username: 'cotufetes',<br/>
-              Email: 'hello@cotufetes.com',<br/>
-              Password: 'poppitypop!!!',<br/>
-              Birthday: '1991-04-02'<br/>
-              FavoriteMovies: [''],<br/>
-            }
+            A JSON object holding data about the user that was updated, including the updated data, structured like:
+            <pre>
+              {
+                "_id": "1",
+                "Username": "thisUser19",
+                "Email": "thisUser19@email.com",
+                "Password": "thisNewPassword=19",
+                "FavoriteMovies": [""]
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -182,17 +198,18 @@
           <td>:Username, :MovieID</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the user whose FavoriteMovies list was updated, including the updated data, structured like:<br/>
-            {<br/>
-              _id: 1<br/>
-              Username: 'cotufetes',<br/>
-              Email: 'hello@cotufetes.com',<br/>
-              Password: 'poppitypop!!!',<br/>
-              Birthday: '1991-04-02'<br/>
-              FavoriteMovies: [
-                '6461e017bf7b96338ebcf277'
-              ],<br/>
-            }
+            A JSON object holding data about the user whose FavoriteMovies list was updated, including the updated data, structured like:
+            <pre>
+              {
+                "_id": "1",
+                "Username": "thisUser19",
+                "Email": "thisUser19@email.com",
+                "Password": "thisNewPassword=19",
+                "FavoriteMovies": [
+                  "6461e017bf7b96338ebcf277"
+                ]
+              }
+            </pre>
           </td>
         </tr>
         <tr>
@@ -202,17 +219,18 @@
           <td>:Username, :MovieID</td>
           <td>None</td>
           <td>
-            A JSON object holding data about the user whose FavoriteMovies list was updated, including the added movie ID, structured like:<br/>
-            {<br/>
-              _id: 1<br/>
-              Username: 'cotufetes',<br/>
-              Email: 'hello@cotufetes.com',<br/>
-              Password: 'poppitypop!!!',<br/>
-              Birthday: '1991-04-02'<br/>
-              FavoriteMovies: [
-                '6461e017bf7b96338ebcf277'
-              ],<br/>
-            }
+            A JSON object holding data about the user whose FavoriteMovies list was updated, including the added movie ID, structured like:
+            <pre>
+              {
+                "_id": "1",
+                "Username": "thisUser19",
+                "Email": "thisUser19@email.com",
+                "Password": "thisNewPassword=19",
+                "FavoriteMovies": [
+                  "6461e017bf7b96338ebcf277"
+                ]
+              }
+            </pre>
           </td>
         </tr>
         <tr>

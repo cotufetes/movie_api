@@ -39,7 +39,7 @@ app.use(morgan('common'));
 app.use(express.static('public'));
 
 //READ textual response at endpoint /
-app.get('/', (req, res) => res.status(200).send('Welcome to myFlix'));
+app.get('/', (req, res) => res.status(200).send('Welcome to cotuFlix'));
 
 /*---Movies---------------------**/
 //READ all movies as JSON at endpoint /movies with JWT
