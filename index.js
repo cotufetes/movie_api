@@ -15,7 +15,9 @@ const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
 
+//For local testing:
 //mongoose.connect('mongodb://localhost:27017/myFlixDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
 mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //Uses body-parser to read body object
@@ -150,20 +152,6 @@ app.post('/users',
       console.error(error);
       res.status(500).send('Error: ' + error);
     });
-});
-
-//READ all users with JWT
-app.get('/users', 
-  passport.authenticate('jwt', {session: false}), 
-  async (req, res) => {
-    await Users.find()
-      .then((users) => {
-        res.status(201).json(users);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
 });
 
 //READ a user by username with JWT
