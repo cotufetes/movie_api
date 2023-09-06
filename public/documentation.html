@@ -78,20 +78,20 @@
             A JSON object holding data about the movie that was requested, structured like:
             <pre>
               {
+                Title: String,
+                ImageURL: String,
+                Year: Number,
                 Genre: {
                     Name: String,
                     Description: String
                 },
+                Synopsis: String,
                 Director: {
                     Name: String,
                     Birth: Number,
                     Death: Number,
                     Bio: String
                 },
-                Title: String,
-                ImageURL: String,
-                Year: Number,
-                Synopsis: String,
                 Featured: Boolean
               }
             </pre>
@@ -193,7 +193,7 @@
         </tr>
         <tr>
           <td>Allows users to add a movie to their list of favorites.</td>
-          <td>/users/:Username/favorites/:MovieID</td>
+          <td>/users/:Username/movies/:MovieID</td>
           <td>POST</td>
           <td>:Username, :MovieID</td>
           <td>None</td>
@@ -214,7 +214,7 @@
         </tr>
         <tr>
           <td>Allows users to remove a movie from their list of favorites.</td>
-          <td>/users/Username/favorites/MovieID</td>
+          <td>/users/:Username/movies/:MovieID</td>
           <td>DELETE</td>
           <td>:Username, :MovieID</td>
           <td>None</td>
