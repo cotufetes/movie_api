@@ -98,7 +98,7 @@ app.get('/genres/:Genre',
 app.get('/directors/:Director', 
   passport.authenticate('jwt', {session: false}), 
   async (req, res) => {
-    await Movies.findOne({ 'Director.Name': req.params.Director })
+    await Movies.find({ 'Director.Name': req.params.Director })
           .then((movies) => {
               if (movies.length == 0) {
                   return res.status(404).send('Error: no directors found with the name ' + req.params.Director);
