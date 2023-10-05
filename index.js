@@ -48,6 +48,7 @@ app.get('/', (req, res) => res.status(200).send('Welcome to cotuFlix'));
 //READ all movies as JSON at endpoint /movies with JWT
 app.get('/movies', 
   async (req, res) => {
+    passport.authenticate('jwt', {session: false}),
     await Movies.find()
       .then((movies) => {
         res.status(201).json(movies);
