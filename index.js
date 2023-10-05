@@ -49,6 +49,7 @@ app.get('/', (req, res) => res.status(200).send('Welcome to cotuFlix'));
 app.get('/movies',
   passport.authenticate('jwt', {session: false}),
   async (req, res) => {
+    passport.authenticate('jwt', {session: false}), 
     await Movies.find()
       .then((movies) => {
         res.status(201).json(movies);
